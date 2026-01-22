@@ -7,182 +7,155 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', 'Cairo', sans-serif; background: #f0f2f5; }
+        body { font-family: 'Poppins', 'Cairo', sans-serif; background: #f8fafc; }
         .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .step-hidden { display: none; }
         .arabic { direction: rtl; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="text-gray-800">
 
-    <nav class="p-4 glass sticky top-0 z-50 shadow-sm flex justify-between items-center px-8">
+    <nav class="p-4 glass sticky top-0 z-50 shadow-sm flex justify-between items-center px-8 border-b">
         <div class="text-2xl font-extrabold text-blue-700">WebGen<span class="text-gray-400">AI</span></div>
-        <button onclick="toggleLang()" id="langBtn" class="border-2 border-blue-600 text-blue-600 px-4 py-1 rounded-full hover:bg-blue-600 hover:text-white transition">العربية</button>
+        <button onclick="toggleLang()" id="langBtn" class="bg-blue-50 text-blue-600 px-5 py-2 rounded-full font-bold hover:bg-blue-600 hover:text-white transition">العربية</button>
     </nav>
 
-    <div class="max-w-5xl mx-auto p-6">
+    <div class="max-w-6xl mx-auto p-6">
         
-        <div id="page1" class="mt-10 text-center space-y-8">
-            <h1 id="h1_p1" class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">Create your professional website <br><span class="text-blue-600 font-black">In Minutes.</span></h1>
-            <p id="p_p1" class="text-gray-500 text-lg">Tell us what you need in English or Arabic.</p>
+        <div id="page1" class="mt-12 text-center space-y-8 fade-in">
+            <h1 id="h1_p1" class="text-4xl md:text-6xl font-extrabold text-gray-900">Build your website <span class="text-blue-600">Instantly.</span></h1>
+            <p id="p_p1" class="text-gray-500 text-xl">Describe your business and our AI will generate the design and price.</p>
             
-            <div class="max-w-2xl mx-auto">
-                <textarea id="userNeeds" class="w-full p-6 h-48 rounded-2xl shadow-xl border-none ring-1 ring-gray-200 focus:ring-4 focus:ring-blue-400 text-lg outline-none" placeholder="e.g. I want a modern restaurant website with a gold theme and a booking system..."></textarea>
-                <button onclick="goToPage2()" class="mt-6 bg-blue-600 text-white px-10 py-4 rounded-2xl text-xl font-bold hover:shadow-2xl hover:-translate-y-1 transition-all w-full md:w-auto">Generate My Website Preview</button>
+            <div class="max-w-3xl mx-auto bg-white p-2 rounded-3xl shadow-2xl border flex flex-col">
+                <textarea id="userNeeds" class="w-full p-6 h-40 rounded-2xl border-none text-lg outline-none resize-none" placeholder="Try: I want a modern dark-themed website for a pizza restaurant..."></textarea>
+                <button onclick="generateSite()" class="m-2 bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-blue-700 transition-all shadow-lg">✨ Generate Preview & Price</button>
             </div>
         </div>
 
-        <div id="page2" class="step-hidden mt-10 animate-fade-in">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div id="page2" class="step-hidden mt-8 fade-in">
+            <div class="flex flex-col lg:flex-row gap-8">
                 
-                <div class="lg:col-span-2 space-y-4">
-                    <div class="bg-white p-4 rounded-3xl shadow-2xl">
-                        <div class="flex items-center gap-2 mb-3 px-2">
-                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
-                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
-                            <span class="ml-4 text-xs font-mono text-gray-400">preview_v1.0.jpg</span>
+                <div class="lg:w-2/3 space-y-6">
+                    <div class="bg-white p-2 rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+                        <div class="bg-gray-100 p-3 flex gap-2 items-center">
+                            <div class="flex gap-1.5"><div class="w-3 h-3 bg-red-400 rounded-full"></div><div class="w-3 h-3 bg-yellow-400 rounded-full"></div><div class="w-3 h-3 bg-green-400 rounded-full"></div></div>
+                            <span class="text-xs text-gray-400 font-mono ml-4">Generated_Design_Live.png</span>
                         </div>
-                        <img id="mainImage" src="" class="w-full h-auto rounded-xl object-cover min-h-[400px]">
+                        <img id="mainImage" src="" class="w-full h-[500px] object-cover rounded-b-2xl transition-all duration-700">
                     </div>
 
-                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-blue-100">
-                        <h3 id="editLabel" class="font-bold mb-3">Want to change something? (Colors, Text, etc.)</h3>
-                        <div class="flex gap-2">
-                            <input id="editInput" type="text" class="flex-1 p-3 border rounded-xl outline-none focus:border-blue-500" placeholder="e.g. Make the background dark blue...">
-                            <button onclick="applyEdit()" class="bg-black text-white px-6 rounded-xl hover:bg-gray-800">Apply</button>
+                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-blue-50">
+                        <h3 id="editLabel" class="font-bold text-lg mb-3">Adjust your design:</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <input id="editInput" type="text" class="flex-1 min-w-[200px] p-4 bg-gray-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-400" placeholder="e.g. Change color to luxury gold...">
+                            <button onclick="applyEdit()" class="bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-black transition">Update Design</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-6">
-                    <div class="bg-blue-600 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-                        <h3 id="summaryLabel" class="text-xl font-bold mb-4">Project Summary</h3>
-                        <ul id="featureList" class="space-y-3 opacity-90 text-sm mb-8"></ul>
+                <div class="lg:w-1/3">
+                    <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-blue-600 sticky top-28">
+                        <h3 id="summaryLabel" class="text-2xl font-bold mb-6">Price Summary</h3>
+                        <div id="featureList" class="space-y-4 mb-10"></div>
                         
-                        <div class="border-t border-blue-400 pt-6">
-                            <span id="costLabel" class="text-sm uppercase tracking-widest opacity-80">Final Cost</span>
-                            <div class="text-4xl font-black mt-1"><span id="finalPrice">0</span> <small class="text-sm">EGP</small></div>
+                        <div class="pt-6 border-t border-dashed">
+                            <span id="costLabel" class="text-gray-400 font-bold uppercase text-xs tracking-widest">Estimated Total</span>
+                            <div class="text-5xl font-black text-gray-900 mt-2"><span id="finalPrice">0</span> <span class="text-lg">EGP</span></div>
                         </div>
-                        
-                        <button onclick="sendWhatsApp()" class="mt-8 w-full bg-green-500 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-400 transition shadow-lg">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                            Confirm via WhatsApp
+
+                        <button onclick="sendWhatsApp()" class="mt-10 w-full bg-[#25D366] text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:scale-105 transition-transform shadow-xl">
+                            Confirm Order
                         </button>
                     </div>
                 </div>
+
             </div>
         </div>
-
     </div>
 
     <script>
         let currentLang = 'en';
-        let basePrice = 5000;
-        let features = [];
-        let userText = "";
+        let price = 5000;
+        let userDescription = "";
 
-        const i18n = {
-            en: {
-                h1: "Create your professional website <br><span class='text-blue-600 font-black'>In Minutes.</span>",
-                p1: "Tell us what you need in English or Arabic.",
-                editLbl: "Want to change something? (Colors, Text, etc.)",
-                sum: "Project Summary",
-                cost: "Final Cost",
-                wa: "Confirm via WhatsApp"
-            },
-            ar: {
-                h1: "أنشئ موقعك الاحترافي <br><span class='text-blue-600 font-black'>في دقائق.</span>",
-                p1: "أخبرنا بما تريد باللغة العربية أو الإنجليزية.",
-                editLbl: "هل تريد تعديل شيء؟ (الألوان، النصوص، إلخ)",
-                sum: "ملخص المشروع",
-                cost: "التكلفة النهائية",
-                wa: "تأكيد عبر واتساب"
-            }
+        const textData = {
+            en: { h1: "Build your website <span class='text-blue-600'>Instantly.</span>", p1: "Describe your business and our AI will generate the design.", edit: "Adjust your design:", sum: "Price Summary", cost: "Estimated Total", btn: "Confirm Order", ph: "Try: I want a modern dark-themed website for a pizza restaurant..." },
+            ar: { h1: "اصنع موقعك <span class='text-blue-600'>في لحظات.</span>", p1: "صف نشاطك التجاري وسيقوم الذكاء الاصطناعي بتوليد التصميم.", edit: "تعديل التصميم:", sum: "ملخص السعر", cost: "الإجمالي التقديري", btn: "تأكيد الطلب", ph: "مثال: أريد موقع مطعم بيتزا بتصميم ليلي فاخر..." }
         };
 
         function toggleLang() {
             currentLang = currentLang === 'en' ? 'ar' : 'en';
-            document.body.classList.toggle('arabic', currentLang === 'ar');
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.body.classList.toggle('arabic', currentLang === 'ar');
             document.getElementById('langBtn').innerText = currentLang === 'en' ? 'العربية' : 'English';
-            
-            document.getElementById('h1_p1').innerHTML = i18n[currentLang].h1;
-            document.getElementById('p_p1').innerText = i18n[currentLang].p1;
-            document.getElementById('editLabel').innerText = i18n[currentLang].editLbl;
-            document.getElementById('summaryLabel').innerText = i18n[currentLang].sum;
-            document.getElementById('costLabel').innerText = i18n[currentLang].cost;
-            document.getElementById('wa').innerText = i18n[currentLang].wa;
+            updateUIText();
         }
 
-        function goToPage2() {
-            userText = document.getElementById('userNeeds').value;
-            if (!userText) return alert("Please type something first!");
+        function updateUIText() {
+            document.getElementById('h1_p1').innerHTML = textData[currentLang].h1;
+            document.getElementById('p_p1').innerText = textData[currentLang].p1;
+            document.getElementById('userNeeds').placeholder = textData[currentLang].ph;
+            document.getElementById('editLabel').innerText = textData[currentLang].edit;
+            document.getElementById('summaryLabel').innerText = textData[currentLang].sum;
+            document.getElementById('costLabel').innerText = textData[currentLang].cost;
+        }
 
+        function generateSite() {
+            userDescription = document.getElementById('userNeeds').value;
+            if (!userDescription) return alert("Please describe your website first!");
+
+            // 1. SHOW THE NEXT PAGE
             document.getElementById('page1').classList.add('step-hidden');
             document.getElementById('page2').classList.remove('step-hidden');
+
+            // 2. THE PHOTO LOGIC (Search for keywords in their text)
+            const img = document.getElementById('mainImage');
+            const searchTerms = userDescription.toLowerCase().replace(/ /g, ',');
+            // Using Source Unsplash to get a photo matching their specific keywords
+            img.src = `https://source.unsplash.com/featured/800x600?${searchTerms},website,ui`;
+
+            // 3. PRICE CALCULATION
+            price = 5000;
+            if(userDescription.includes('shop') || userDescription.includes('متجر')) price += 10000;
+            if(userDescription.includes('booking') || userDescription.includes('حجز')) price += 4000;
             
-            calculateLogic(userText);
+            document.getElementById('finalPrice').innerText = price.toLocaleString();
+            renderFeatures();
         }
 
-        function calculateLogic(text) {
-            const input = text.toLowerCase();
+        function renderFeatures() {
             const list = document.getElementById('featureList');
-            const img = document.getElementById('mainImage');
-            list.innerHTML = "";
-            basePrice = 5000; // Base landing page
-            
-            // Image logic based on keywords
-            if (input.includes('store') || input.includes('متجر') || input.includes('shop')) {
-                img.src = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80";
-                features = ["E-commerce System", "Payment Integration", "Product Pages"];
-                basePrice += 15000;
-            } else if (input.includes('food') || input.includes('rest') || input.includes('مطعم')) {
-                img.src = "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80";
-                features = ["Digital Menu", "Booking Form", "Location Map"];
-                basePrice += 7000;
-            } else {
-                img.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80";
-                features = ["Custom Design", "Mobile Responsive", "Contact Form"];
-                basePrice += 2000;
-            }
-
-            features.forEach(f => {
-                let li = document.createElement('li');
-                li.className = "flex items-center gap-2";
-                li.innerHTML = `✅ ${f}`;
-                list.appendChild(li);
-            });
-
-            document.getElementById('finalPrice').innerText = basePrice.toLocaleString();
+            list.innerHTML = `<div class="flex items-center gap-3 text-gray-700">✅ <span>Custom Design based on: "${userDescription.substring(0,20)}..."</span></div>`;
         }
 
         function applyEdit() {
             const edit = document.getElementById('editInput').value;
             if(!edit) return;
-            
-            // Visual feedback of "applying"
+
+            // Update photo to reflect the new edit keyword
             const img = document.getElementById('mainImage');
-            img.style.opacity = "0.5";
+            img.style.opacity = "0.3";
             
             setTimeout(() => {
+                const searchTerms = (userDescription + "," + edit).toLowerCase().replace(/ /g, ',');
+                img.src = `https://source.unsplash.com/featured/800x600?${searchTerms},website`;
                 img.style.opacity = "1";
-                // We simulate "AI application" by adding a fee and a list item
-                basePrice += 1000;
-                document.getElementById('finalPrice').innerText = basePrice.toLocaleString();
                 
-                let li = document.createElement('li');
-                li.className = "flex items-center gap-2 text-yellow-300 font-bold";
-                li.innerHTML = `✨ Edit: ${edit}`;
-                document.getElementById('featureList').appendChild(li);
+                price += 1500; // Each edit adds to the cost
+                document.getElementById('finalPrice').innerText = price.toLocaleString();
+                
+                const list = document.getElementById('featureList');
+                list.innerHTML += `<div class="flex items-center gap-3 text-blue-600 font-bold fade-in">✨ <span>Applied: ${edit}</span></div>`;
                 document.getElementById('editInput').value = "";
-            }, 800);
+            }, 600);
         }
 
         function sendWhatsApp() {
-            const phone = "201015653338"; // Egypt code + phone
-            const msg = `Hello! I want to build a website.%0A%0ADetails: ${userText}%0AFeatures: ${features.join(', ')}%0AFinal Price: ${basePrice} EGP`;
-            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+            const phone = "201015653338";
+            const message = `Hello! I want this website:%0A%0ADescription: ${userDescription}%0AFinal Price: ${price} EGP`;
+            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
         }
     </script>
 </body>
