@@ -1,161 +1,171 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGen Market - Egypt</title>
+    <title>AI Site Architect | Egypt</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Plus+Jakarta+Sans:wght@400;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', 'Cairo', sans-serif; background: #f8fafc; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .step-hidden { display: none; }
-        .arabic { direction: rtl; }
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif; background: #0f172a; color: white; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .error-shake { animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="min-h-screen">
 
-    <nav class="p-4 glass sticky top-0 z-50 shadow-sm flex justify-between items-center px-8 border-b">
-        <div class="text-2xl font-extrabold text-blue-700">WebGen<span class="text-gray-400">AI</span></div>
-        <button onclick="toggleLang()" id="langBtn" class="bg-blue-50 text-blue-600 px-5 py-2 rounded-full font-bold hover:bg-blue-600 hover:text-white transition">العربية</button>
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
+        <div class="text-2xl font-black tracking-tighter">ARCHITECT<span class="text-blue-500">.AI</span></div>
+        <button onclick="toggleLang()" id="langBtn" class="px-4 py-2 rounded-lg glass-card hover:bg-white hover:text-black transition font-bold">العربية</button>
     </nav>
 
-    <div class="max-w-6xl mx-auto p-6">
+    <div class="max-w-4xl mx-auto px-6 py-12">
         
-        <div id="page1" class="mt-12 text-center space-y-8 fade-in">
-            <h1 id="h1_p1" class="text-4xl md:text-6xl font-extrabold text-gray-900">Build your website <span class="text-blue-600">Instantly.</span></h1>
-            <p id="p_p1" class="text-gray-500 text-xl">Describe your business and our AI will generate the design and price.</p>
+        <div id="setupPhase" class="space-y-10 text-center">
+            <h1 id="mainTitle" class="text-5xl md:text-7xl font-extrabold tracking-tight">Describe your <span class="text-blue-500">Vision.</span></h1>
+            <p id="subTitle" class="text-gray-400 text-lg">Our AI will architect a full landing page and calculate regional development costs.</p>
             
-            <div class="max-w-3xl mx-auto bg-white p-2 rounded-3xl shadow-2xl border flex flex-col">
-                <textarea id="userNeeds" class="w-full p-6 h-40 rounded-2xl border-none text-lg outline-none resize-none" placeholder="Try: I want a modern dark-themed website for a pizza restaurant..."></textarea>
-                <button onclick="generateSite()" class="m-2 bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-blue-700 transition-all shadow-lg">✨ Generate Preview & Price</button>
+            <div id="inputContainer" class="relative">
+                <textarea id="userInput" class="w-full h-48 p-8 rounded-3xl bg-slate-800 border-2 border-slate-700 focus:border-blue-500 outline-none text-xl transition-all" placeholder="Enter details about your brand, colors, and required features..."></textarea>
+                
+                <div id="errorMessage" class="hidden mt-4 p-4 bg-red-500/20 border border-red-500 text-red-200 rounded-xl text-sm">
+                    ⚠️ I couldn't understand that. Please provide more detail (at least 3 words) about what your website does.
+                </div>
+
+                <button onclick="processAI()" id="genBtn" class="mt-6 w-full py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black text-xl shadow-lg shadow-blue-500/20 transition-all flex justify-center items-center gap-3">
+                    <span id="btnText">Build My Project</span>
+                </button>
             </div>
         </div>
 
-        <div id="page2" class="step-hidden mt-8 fade-in">
-            <div class="flex flex-col lg:flex-row gap-8">
-                
-                <div class="lg:w-2/3 space-y-6">
-                    <div class="bg-white p-2 rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
-                        <div class="bg-gray-100 p-3 flex gap-2 items-center">
-                            <div class="flex gap-1.5"><div class="w-3 h-3 bg-red-400 rounded-full"></div><div class="w-3 h-3 bg-yellow-400 rounded-full"></div><div class="w-3 h-3 bg-green-400 rounded-full"></div></div>
-                            <span class="text-xs text-gray-400 font-mono ml-4">Generated_Design_Live.png</span>
-                        </div>
-                        <img id="mainImage" src="" class="w-full h-[500px] object-cover rounded-b-2xl transition-all duration-700">
-                    </div>
+        <div id="loadingPhase" class="hidden flex flex-col items-center justify-center py-20 space-y-6">
+            <div class="loader"></div>
+            <p class="text-blue-400 font-mono animate-pulse">Analysing requirements... Creating UI Mockups... Calculating EGP rates...</p>
+        </div>
 
-                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-blue-50">
-                        <h3 id="editLabel" class="font-bold text-lg mb-3">Adjust your design:</h3>
-                        <div class="flex flex-wrap gap-3">
-                            <input id="editInput" type="text" class="flex-1 min-w-[200px] p-4 bg-gray-50 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-400" placeholder="e.g. Change color to luxury gold...">
-                            <button onclick="applyEdit()" class="bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-black transition">Update Design</button>
-                        </div>
+        <div id="resultPhase" class="hidden space-y-8 pb-20">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="lg:w-2/3 space-y-4">
+                    <div class="flex justify-between items-end">
+                        <h2 class="text-2xl font-bold">AI Generated Preview</h2>
+                        <button onclick="applyEdit()" class="text-blue-400 text-sm hover:underline">Request Edit</button>
+                    </div>
+                    <div class="rounded-3xl overflow-hidden border-4 border-slate-800 shadow-2xl">
+                        <img id="aiPreview" src="" alt="Landing Page" class="w-full h-auto">
                     </div>
                 </div>
 
                 <div class="lg:w-1/3">
-                    <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-blue-600 sticky top-28">
-                        <h3 id="summaryLabel" class="text-2xl font-bold mb-6">Price Summary</h3>
-                        <div id="featureList" class="space-y-4 mb-10"></div>
+                    <div class="glass-card p-8 rounded-3xl sticky top-10">
+                        <h3 class="text-xl font-bold mb-6 border-b border-white/10 pb-4">Estimate Summary</h3>
+                        <div id="featureTags" class="flex flex-wrap gap-2 mb-8"></div>
                         
-                        <div class="pt-6 border-t border-dashed">
-                            <span id="costLabel" class="text-gray-400 font-bold uppercase text-xs tracking-widest">Estimated Total</span>
-                            <div class="text-5xl font-black text-gray-900 mt-2"><span id="finalPrice">0</span> <span class="text-lg">EGP</span></div>
+                        <div class="mb-10">
+                            <p class="text-gray-400 text-sm uppercase">Total Development (EGP)</p>
+                            <p id="priceDisplay" class="text-5xl font-black text-blue-400">0</p>
                         </div>
 
-                        <button onclick="sendWhatsApp()" class="mt-10 w-full bg-[#25D366] text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:scale-105 transition-transform shadow-xl">
-                            Confirm Order
+                        <button onclick="contactDev()" class="w-full py-4 bg-green-600 hover:bg-green-500 rounded-xl font-bold flex items-center justify-center gap-3">
+                            Launch with WhatsApp
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
+
     </div>
 
     <script>
-        let currentLang = 'en';
-        let price = 5000;
-        let userDescription = "";
-
-        const textData = {
-            en: { h1: "Build your website <span class='text-blue-600'>Instantly.</span>", p1: "Describe your business and our AI will generate the design.", edit: "Adjust your design:", sum: "Price Summary", cost: "Estimated Total", btn: "Confirm Order", ph: "Try: I want a modern dark-themed website for a pizza restaurant..." },
-            ar: { h1: "اصنع موقعك <span class='text-blue-600'>في لحظات.</span>", p1: "صف نشاطك التجاري وسيقوم الذكاء الاصطناعي بتوليد التصميم.", edit: "تعديل التصميم:", sum: "ملخص السعر", cost: "الإجمالي التقديري", btn: "تأكيد الطلب", ph: "مثال: أريد موقع مطعم بيتزا بتصميم ليلي فاخر..." }
-        };
+        let lang = 'en';
+        let currentPrice = 0;
 
         function toggleLang() {
-            currentLang = currentLang === 'en' ? 'ar' : 'en';
-            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            document.body.classList.toggle('arabic', currentLang === 'ar');
-            document.getElementById('langBtn').innerText = currentLang === 'en' ? 'العربية' : 'English';
-            updateUIText();
+            lang = lang === 'en' ? 'ar' : 'en';
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('langBtn').innerText = lang === 'en' ? 'العربية' : 'English';
+            // Simple text swap
+            document.getElementById('mainTitle').innerHTML = lang === 'en' ? 'Describe your <span class="text-blue-500">Vision.</span>' : 'صف <span class="text-blue-500">رؤيتك.</span>';
         }
 
-        function updateUIText() {
-            document.getElementById('h1_p1').innerHTML = textData[currentLang].h1;
-            document.getElementById('p_p1').innerText = textData[currentLang].p1;
-            document.getElementById('userNeeds').placeholder = textData[currentLang].ph;
-            document.getElementById('editLabel').innerText = textData[currentLang].edit;
-            document.getElementById('summaryLabel').innerText = textData[currentLang].sum;
-            document.getElementById('costLabel').innerText = textData[currentLang].cost;
-        }
+        async function processAI() {
+            const input = document.getElementById('userInput').value.trim();
+            const errorBox = document.getElementById('errorMessage');
+            const inputArea = document.getElementById('userInput');
 
-        function generateSite() {
-            userDescription = document.getElementById('userNeeds').value;
-            if (!userDescription) return alert("Please describe your website first!");
+            // 1. ADVANCED VALIDATION
+            if (input.length < 15 || !input.includes(" ")) {
+                errorBox.classList.remove('hidden');
+                inputArea.classList.add('error-shake', 'border-red-500');
+                setTimeout(() => inputArea.classList.remove('error-shake'), 500);
+                return;
+            }
 
-            // 1. SHOW THE NEXT PAGE
-            document.getElementById('page1').classList.add('step-hidden');
-            document.getElementById('page2').classList.remove('step-hidden');
-
-            // 2. THE PHOTO LOGIC (Search for keywords in their text)
-            const img = document.getElementById('mainImage');
-            const searchTerms = userDescription.toLowerCase().replace(/ /g, ',');
-            // Using Source Unsplash to get a photo matching their specific keywords
-            img.src = `https://source.unsplash.com/featured/800x600?${searchTerms},website,ui`;
-
-            // 3. PRICE CALCULATION
-            price = 5000;
-            if(userDescription.includes('shop') || userDescription.includes('متجر')) price += 10000;
-            if(userDescription.includes('booking') || userDescription.includes('حجز')) price += 4000;
+            errorBox.classList.add('hidden');
+            inputArea.classList.remove('border-red-500');
             
-            document.getElementById('finalPrice').innerText = price.toLocaleString();
-            renderFeatures();
+            // 2. SHOW LOADER
+            document.getElementById('setupPhase').classList.add('hidden');
+            document.getElementById('loadingPhase').classList.remove('hidden');
+
+            // Simulate AI "Thinking"
+            setTimeout(() => {
+                showResults(input);
+            }, 2500);
         }
 
-        function renderFeatures() {
-            const list = document.getElementById('featureList');
-            list.innerHTML = `<div class="flex items-center gap-3 text-gray-700">✅ <span>Custom Design based on: "${userDescription.substring(0,20)}..."</span></div>`;
+        function showResults(input) {
+            document.getElementById('loadingPhase').classList.add('hidden');
+            document.getElementById('resultPhase').classList.remove('hidden');
+
+            // 3. GENERATE LANDING PAGE PHOTO
+            // We use a high-quality AI generator URL pattern
+            const prompt = encodeURIComponent(input + " website landing page professional ui ux high quality");
+            document.getElementById('aiPreview').src = `https://image.pollinations.ai/prompt/${prompt}?width=1080&height=1350&nologo=true`;
+
+            // 4. PRICE ENGINE
+            currentPrice = 7500; // Starting base
+            const tags = document.getElementById('featureTags');
+            tags.innerHTML = "";
+
+            const logic = [
+                { key: ['shop', 'store', 'متجر', 'بيع'], name: 'E-Commerce Logic', p: 12000 },
+                { key: ['app', 'dashboard', 'لوحة'], name: 'User Dashboard', p: 15000 },
+                { key: ['dark', 'gold', 'lux', 'فاخر'], name: 'Premium Theme', p: 3000 },
+                { key: ['food', 'rest', 'مطعم'], name: 'Booking System', p: 5000 }
+            ];
+
+            logic.forEach(item => {
+                if (item.key.some(k => input.toLowerCase().includes(k))) {
+                    currentPrice += item.p;
+                    tags.innerHTML += `<span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-bold">${item.name}</span>`;
+                }
+            });
+
+            document.getElementById('priceDisplay').innerText = currentPrice.toLocaleString() + " EGP";
         }
 
         function applyEdit() {
-            const edit = document.getElementById('editInput').value;
-            if(!edit) return;
-
-            // Update photo to reflect the new edit keyword
-            const img = document.getElementById('mainImage');
-            img.style.opacity = "0.3";
-            
-            setTimeout(() => {
-                const searchTerms = (userDescription + "," + edit).toLowerCase().replace(/ /g, ',');
-                img.src = `https://source.unsplash.com/featured/800x600?${searchTerms},website`;
-                img.style.opacity = "1";
+            const newEdit = prompt("What specific change do you want to see?");
+            if (newEdit) {
+                document.getElementById('resultPhase').classList.add('hidden');
+                document.getElementById('loadingPhase').classList.remove('hidden');
                 
-                price += 1500; // Each edit adds to the cost
-                document.getElementById('finalPrice').innerText = price.toLocaleString();
-                
-                const list = document.getElementById('featureList');
-                list.innerHTML += `<div class="flex items-center gap-3 text-blue-600 font-bold fade-in">✨ <span>Applied: ${edit}</span></div>`;
-                document.getElementById('editInput').value = "";
-            }, 600);
+                setTimeout(() => {
+                    const original = document.getElementById('userInput').value;
+                    showResults(original + " " + newEdit);
+                }, 2000);
+            }
         }
 
-        function sendWhatsApp() {
+        function contactDev() {
             const phone = "201015653338";
-            const message = `Hello! I want this website:%0A%0ADescription: ${userDescription}%0AFinal Price: ${price} EGP`;
-            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+            const details = document.getElementById('userInput').value;
+            const link = `https://wa.me/${phone}?text=I used your AI Architect.%0A%0AProject: ${details}%0AEstimated: ${currentPrice} EGP`;
+            window.open(link, '_blank');
         }
     </script>
 </body>
