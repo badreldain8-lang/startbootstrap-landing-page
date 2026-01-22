@@ -3,122 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebMarket AI - Egypt</title>
+    <title>WebGen Market - Egypt</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;600;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Inter:wght@400;700&display=swap');
-        body { font-family: 'Inter', 'Cairo', sans-serif; transition: all 0.3s ease; }
-        .arabic { direction: rtl; font-family: 'Cairo', sans-serif; }
+        body { font-family: 'Poppins', 'Cairo', sans-serif; background: #f0f2f5; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .step-hidden { display: none; }
+        .arabic { direction: rtl; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="text-gray-800">
 
-    <nav class="p-6 bg-white shadow-sm flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-blue-600" id="logoText">WebMarket AI</h1>
-        <button onclick="toggleLanguage()" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg font-medium" id="langBtn">العربية</button>
+    <nav class="p-4 glass sticky top-0 z-50 shadow-sm flex justify-between items-center px-8">
+        <div class="text-2xl font-extrabold text-blue-700">WebGen<span class="text-gray-400">AI</span></div>
+        <button onclick="toggleLang()" id="langBtn" class="border-2 border-blue-600 text-blue-600 px-4 py-1 rounded-full hover:bg-blue-600 hover:text-white transition">العربية</button>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6">
-        <section id="step1" class="space-y-6">
-            <h2 class="text-3xl font-bold" id="mainTitle">Describe your dream website</h2>
-            <textarea id="userDescription" class="w-full h-40 p-4 border rounded-xl shadow-inner focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Ex: I want a website for my clothing brand with a payment gateway..."></textarea>
+    <div class="max-w-5xl mx-auto p-6">
+        
+        <div id="page1" class="mt-10 text-center space-y-8">
+            <h1 id="h1_p1" class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">Create your professional website <br><span class="text-blue-600 font-black">In Minutes.</span></h1>
+            <p id="p_p1" class="text-gray-500 text-lg">Tell us what you need in English or Arabic.</p>
             
-            <button onclick="generateRecommendations()" class="w-full bg-blue-600 text-white py-4 rounded-xl text-xl font-bold hover:bg-blue-700 transition" id="recommendBtn">Get Recommendations & Price</button>
-        </section>
-
-        <section id="resultSection" class="hidden mt-10 space-y-8 animate-fade-in">
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-xl">
-                <h3 class="font-bold text-lg mb-2" id="recTitle">AI Recommendations for you:</h3>
-                <ul id="recList" class="list-disc list-inside space-y-2 text-gray-700"></ul>
+            <div class="max-w-2xl mx-auto">
+                <textarea id="userNeeds" class="w-full p-6 h-48 rounded-2xl shadow-xl border-none ring-1 ring-gray-200 focus:ring-4 focus:ring-blue-400 text-lg outline-none" placeholder="e.g. I want a modern restaurant website with a gold theme and a booking system..."></textarea>
+                <button onclick="goToPage2()" class="mt-6 bg-blue-600 text-white px-10 py-4 rounded-2xl text-xl font-bold hover:shadow-2xl hover:-translate-y-1 transition-all w-full md:w-auto">Generate My Website Preview</button>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-md border">
-                    <h3 class="font-bold mb-4" id="previewTitle">Your Layout Preview</h3>
-                    <img id="previewImg" src="https://via.placeholder.com/400x300?text=Generating+Preview..." class="w-full rounded-lg shadow">
-                    <p class="mt-4 text-sm text-gray-500" id="editNote">You can edit these features later with our team.</p>
+        <div id="page2" class="step-hidden mt-10 animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-white p-4 rounded-3xl shadow-2xl">
+                        <div class="flex items-center gap-2 mb-3 px-2">
+                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                            <span class="ml-4 text-xs font-mono text-gray-400">preview_v1.0.jpg</span>
+                        </div>
+                        <img id="mainImage" src="" class="w-full h-auto rounded-xl object-cover min-h-[400px]">
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl shadow-lg border border-blue-100">
+                        <h3 id="editLabel" class="font-bold mb-3">Want to change something? (Colors, Text, etc.)</h3>
+                        <div class="flex gap-2">
+                            <input id="editInput" type="text" class="flex-1 p-3 border rounded-xl outline-none focus:border-blue-500" placeholder="e.g. Make the background dark blue...">
+                            <button onclick="applyEdit()" class="bg-black text-white px-6 rounded-xl hover:bg-gray-800">Apply</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-blue-900 text-white p-8 rounded-xl shadow-xl flex flex-col justify-center items-center">
-                    <h3 class="text-xl opacity-80" id="costTitle">Estimated Cost</h3>
-                    <div class="text-5xl font-black my-4"><span id="totalPrice">0</span> <small class="text-lg">EGP</small></div>
-                    <button class="bg-green-500 hover:bg-green-400 px-6 py-3 rounded-full font-bold transition w-full" id="orderBtn">Start Building Now</button>
+                <div class="space-y-6">
+                    <div class="bg-blue-600 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                        <h3 id="summaryLabel" class="text-xl font-bold mb-4">Project Summary</h3>
+                        <ul id="featureList" class="space-y-3 opacity-90 text-sm mb-8"></ul>
+                        
+                        <div class="border-t border-blue-400 pt-6">
+                            <span id="costLabel" class="text-sm uppercase tracking-widest opacity-80">Final Cost</span>
+                            <div class="text-4xl font-black mt-1"><span id="finalPrice">0</span> <small class="text-sm">EGP</small></div>
+                        </div>
+                        
+                        <button onclick="sendWhatsApp()" class="mt-8 w-full bg-green-500 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-400 transition shadow-lg">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                            Confirm via WhatsApp
+                        </button>
+                    </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+
+    </div>
 
     <script>
         let currentLang = 'en';
+        let basePrice = 5000;
+        let features = [];
+        let userText = "";
 
-        const content = {
+        const i18n = {
             en: {
-                logo: "WebMarket AI", lang: "العربية", title: "Describe your dream website",
-                placeholder: "Ex: I want a bakery website with a menu and delivery...",
-                btn: "Get Recommendations & Price", rec: "AI Recommendations for you:",
-                cost: "Estimated Cost", order: "Start Building Now", edit: "You can edit these features later.",
-                preview: "Your Layout Preview"
+                h1: "Create your professional website <br><span class='text-blue-600 font-black'>In Minutes.</span>",
+                p1: "Tell us what you need in English or Arabic.",
+                editLbl: "Want to change something? (Colors, Text, etc.)",
+                sum: "Project Summary",
+                cost: "Final Cost",
+                wa: "Confirm via WhatsApp"
             },
             ar: {
-                logo: "سوق المواقع", lang: "English", title: "صف موقع أحلامك بالتفصيل",
-                placeholder: "مثال: أريد موقع لمخبز مع قائمة طعام وخدمة توصيل...",
-                btn: "احصل على الاقتراحات والسعر", rec: "توصيات الذكاء الاصطناعي لك:",
-                cost: "التكلفة التقديرية", order: "ابدأ التنفيذ الآن", edit: "يمكنك تعديل هذه الخصائص لاحقاً.",
-                preview: "معاينة التصميم"
+                h1: "أنشئ موقعك الاحترافي <br><span class='text-blue-600 font-black'>في دقائق.</span>",
+                p1: "أخبرنا بما تريد باللغة العربية أو الإنجليزية.",
+                editLbl: "هل تريد تعديل شيء؟ (الألوان، النصوص، إلخ)",
+                sum: "ملخص المشروع",
+                cost: "التكلفة النهائية",
+                wa: "تأكيد عبر واتساب"
             }
         };
 
-        function toggleLanguage() {
+        function toggleLang() {
             currentLang = currentLang === 'en' ? 'ar' : 'en';
-            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             document.body.classList.toggle('arabic', currentLang === 'ar');
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('langBtn').innerText = currentLang === 'en' ? 'العربية' : 'English';
             
-            // Update UI Text
-            document.getElementById('logoText').innerText = content[currentLang].logo;
-            document.getElementById('langBtn').innerText = content[currentLang].lang;
-            document.getElementById('mainTitle').innerText = content[currentLang].title;
-            document.getElementById('userDescription').placeholder = content[currentLang].placeholder;
-            document.getElementById('recommendBtn').innerText = content[currentLang].btn;
-            document.getElementById('recTitle').innerText = content[currentLang].rec;
-            document.getElementById('costTitle').innerText = content[currentLang].cost;
-            document.getElementById('orderBtn').innerText = content[currentLang].order;
-            document.getElementById('editNote').innerText = content[currentLang].edit;
-            document.getElementById('previewTitle').innerText = content[currentLang].preview;
+            document.getElementById('h1_p1').innerHTML = i18n[currentLang].h1;
+            document.getElementById('p_p1').innerText = i18n[currentLang].p1;
+            document.getElementById('editLabel').innerText = i18n[currentLang].editLbl;
+            document.getElementById('summaryLabel').innerText = i18n[currentLang].sum;
+            document.getElementById('costLabel').innerText = i18n[currentLang].cost;
+            document.getElementById('wa').innerText = i18n[currentLang].wa;
         }
 
-        function generateRecommendations() {
-            const desc = document.getElementById('userDescription').value.toLowerCase();
-            const list = document.getElementById('recList');
-            const priceEl = document.getElementById('totalPrice');
-            const img = document.getElementById('previewImg');
-            list.innerHTML = "";
-            
-            let basePrice = 5000;
-            let recs = [];
+        function goToPage2() {
+            userText = document.getElementById('userNeeds').value;
+            if (!userText) return alert("Please type something first!");
 
-            // Logic Simulation (AI Simulation)
-            if (desc.includes('shop') || desc.includes('store') || desc.includes('متجر')) {
-                recs = currentLang === 'en' ? ["Shopping Cart", "Payment Gateway (Fawry/Stripe)", "Product Management"] : ["سلة تسوق", "بوابة دفع (فوري)", "نظام إدارة المنتجات"];
+            document.getElementById('page1').classList.add('step-hidden');
+            document.getElementById('page2').classList.remove('step-hidden');
+            
+            calculateLogic(userText);
+        }
+
+        function calculateLogic(text) {
+            const input = text.toLowerCase();
+            const list = document.getElementById('featureList');
+            const img = document.getElementById('mainImage');
+            list.innerHTML = "";
+            basePrice = 5000; // Base landing page
+            
+            // Image logic based on keywords
+            if (input.includes('store') || input.includes('متجر') || input.includes('shop')) {
+                img.src = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80";
+                features = ["E-commerce System", "Payment Integration", "Product Pages"];
                 basePrice += 15000;
-                img.src = "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=400&q=80";
-            } else if (desc.includes('food') || desc.includes('restaurant') || desc.includes('مطعم')) {
-                recs = currentLang === 'en' ? ["Online Menu", "Reservation System", "Google Maps Integration"] : ["منيو أونلاين", "نظام حجز طاولات", "ربط مع خرائط جوجل"];
-                basePrice += 8000;
-                img.src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80";
+            } else if (input.includes('food') || input.includes('rest') || input.includes('مطعم')) {
+                img.src = "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80";
+                features = ["Digital Menu", "Booking Form", "Location Map"];
+                basePrice += 7000;
             } else {
-                recs = currentLang === 'en' ? ["Responsive Design", "Contact Form", "SEO Optimization"] : ["تصميم متجاوب", "نموذج اتصال", "تحسين محركات البحث"];
-                basePrice += 3000;
-                img.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80";
+                img.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80";
+                features = ["Custom Design", "Mobile Responsive", "Contact Form"];
+                basePrice += 2000;
             }
 
-            recs.forEach(item => {
+            features.forEach(f => {
                 let li = document.createElement('li');
-                li.innerText = item;
+                li.className = "flex items-center gap-2";
+                li.innerHTML = `✅ ${f}`;
                 list.appendChild(li);
             });
 
-            priceEl.innerText = basePrice.toLocaleString();
-            document.getElementById('resultSection').classList.remove('hidden');
+            document.getElementById('finalPrice').innerText = basePrice.toLocaleString();
+        }
+
+        function applyEdit() {
+            const edit = document.getElementById('editInput').value;
+            if(!edit) return;
+            
+            // Visual feedback of "applying"
+            const img = document.getElementById('mainImage');
+            img.style.opacity = "0.5";
+            
+            setTimeout(() => {
+                img.style.opacity = "1";
+                // We simulate "AI application" by adding a fee and a list item
+                basePrice += 1000;
+                document.getElementById('finalPrice').innerText = basePrice.toLocaleString();
+                
+                let li = document.createElement('li');
+                li.className = "flex items-center gap-2 text-yellow-300 font-bold";
+                li.innerHTML = `✨ Edit: ${edit}`;
+                document.getElementById('featureList').appendChild(li);
+                document.getElementById('editInput').value = "";
+            }, 800);
+        }
+
+        function sendWhatsApp() {
+            const phone = "201015653338"; // Egypt code + phone
+            const msg = `Hello! I want to build a website.%0A%0ADetails: ${userText}%0AFeatures: ${features.join(', ')}%0AFinal Price: ${basePrice} EGP`;
+            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
         }
     </script>
 </body>
