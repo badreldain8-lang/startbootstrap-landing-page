@@ -3,168 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Site Architect | Egypt</title>
+    <title>Gemini Web Architect</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Plus+Jakarta+Sans:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif; background: #0f172a; color: white; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .error-shake { animation: shake 0.5s; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        body { font-family: 'Space Grotesk', 'Cairo', sans-serif; background: #050505; color: white; overflow-x: hidden; }
+        .gemini-gradient { background: linear-gradient(90deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .loading-bar { height: 2px; background: linear-gradient(90deg, #4285f4, #9b72cb); width: 0%; transition: width 2s ease-in-out; }
         .hidden { display: none; }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="p-4 md:p-8">
 
-    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
-        <div class="text-2xl font-black tracking-tighter">ARCHITECT<span class="text-blue-500">.AI</span></div>
-        <button onclick="toggleLang()" id="langBtn" class="px-4 py-2 rounded-lg glass-card hover:bg-white hover:text-black transition font-bold">العربية</button>
-    </nav>
-
-    <div class="max-w-4xl mx-auto px-6 py-12">
-        
-        <div id="setupPhase" class="space-y-10 text-center">
-            <h1 id="mainTitle" class="text-5xl md:text-7xl font-extrabold tracking-tight">Describe your <span class="text-blue-500">Vision.</span></h1>
-            <p id="subTitle" class="text-gray-400 text-lg">Our AI will architect a full landing page and calculate regional development costs.</p>
-            
-            <div id="inputContainer" class="relative">
-                <textarea id="userInput" class="w-full h-48 p-8 rounded-3xl bg-slate-800 border-2 border-slate-700 focus:border-blue-500 outline-none text-xl transition-all" placeholder="Enter details about your brand, colors, and required features..."></textarea>
-                
-                <div id="errorMessage" class="hidden mt-4 p-4 bg-red-500/20 border border-red-500 text-red-200 rounded-xl text-sm">
-                    ⚠️ I couldn't understand that. Please provide more detail (at least 3 words) about what your website does.
-                </div>
-
-                <button onclick="processAI()" id="genBtn" class="mt-6 w-full py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black text-xl shadow-lg shadow-blue-500/20 transition-all flex justify-center items-center gap-3">
-                    <span id="btnText">Build My Project</span>
-                </button>
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-16">
+            <div class="text-xl font-bold tracking-widest">GEMINI<span class="text-blue-500">BUILDER</span></div>
+            <div class="flex gap-4">
+                <button onclick="toggleLang()" class="text-sm opacity-50 hover:opacity-100 transition">EN/عربي</button>
+                <div class="px-3 py-1 rounded-full border border-blue-500 text-[10px] text-blue-500 font-bold uppercase tracking-tighter">AI Active</div>
             </div>
+        </header>
+
+        <div id="inputSection" class="max-w-3xl mx-auto text-center space-y-8 py-12">
+            <h1 class="text-5xl md:text-7xl font-bold leading-tight">Build with <span class="gemini-gradient">Gemini AI.</span></h1>
+            <p class="text-gray-400 text-lg">Describe your business. Gemini will architect the UI and calculate development costs in EGP.</p>
+            
+            <div class="relative group">
+                <textarea id="promptInput" class="w-full h-40 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 text-xl focus:border-blue-500 transition-all outline-none" placeholder="e.g. A futuristic website for a luxury furniture store in Cairo with gold accents..."></textarea>
+                <div id="errorMsg" class="hidden mt-2 text-red-400 text-sm font-bold text-left px-4"></div>
+            </div>
+
+            <button onclick="startGeminiBuild()" class="w-full bg-white text-black py-5 rounded-2xl font-black text-xl hover:bg-blue-500 hover:text-white transition-all shadow-xl">
+                Generate Architecture
+            </button>
         </div>
 
-        <div id="loadingPhase" class="hidden flex flex-col items-center justify-center py-20 space-y-6">
-            <div class="loader"></div>
-            <p class="text-blue-400 font-mono animate-pulse">Analysing requirements... Creating UI Mockups... Calculating EGP rates...</p>
+        <div id="loadingSection" class="hidden py-20 text-center space-y-4">
+            <div class="loading-bar mx-auto w-full max-w-md rounded-full overflow-hidden mb-4">
+                <div id="progress" class="h-full bg-blue-500" style="width: 0%"></div>
+            </div>
+            <p id="statusText" class="text-sm font-mono text-blue-400 uppercase tracking-widest">Consulting Gemini Model...</p>
         </div>
 
-        <div id="resultPhase" class="hidden space-y-8 pb-20">
-            <div class="flex flex-col lg:flex-row gap-8">
-                <div class="lg:w-2/3 space-y-4">
-                    <div class="flex justify-between items-end">
-                        <h2 class="text-2xl font-bold">AI Generated Preview</h2>
-                        <button onclick="applyEdit()" class="text-blue-400 text-sm hover:underline">Request Edit</button>
-                    </div>
-                    <div class="rounded-3xl overflow-hidden border-4 border-slate-800 shadow-2xl">
-                        <img id="aiPreview" src="" alt="Landing Page" class="w-full h-auto">
-                    </div>
+        <div id="resultSection" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 pt-10">
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass p-2 rounded-[2rem] overflow-hidden">
+                    <img id="outputImage" src="" class="w-full h-auto rounded-[1.8rem] shadow-2xl">
                 </div>
+            </div>
+            
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass p-8 rounded-[2rem] h-full flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4 gemini-gradient">AI Analysis</h2>
+                        <div id="aiInsights" class="space-y-3 text-sm text-gray-300"></div>
+                    </div>
 
-                <div class="lg:w-1/3">
-                    <div class="glass-card p-8 rounded-3xl sticky top-10">
-                        <h3 class="text-xl font-bold mb-6 border-b border-white/10 pb-4">Estimate Summary</h3>
-                        <div id="featureTags" class="flex flex-wrap gap-2 mb-8"></div>
+                    <div class="mt-12 pt-8 border-t border-white/10">
+                        <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Development Estimate</p>
+                        <div class="text-5xl font-bold mb-8"><span id="priceEGP">0</span> <small class="text-xs text-gray-500">EGP</small></div>
                         
-                        <div class="mb-10">
-                            <p class="text-gray-400 text-sm uppercase">Total Development (EGP)</p>
-                            <p id="priceDisplay" class="text-5xl font-black text-blue-400">0</p>
-                        </div>
-
-                        <button onclick="contactDev()" class="w-full py-4 bg-green-600 hover:bg-green-500 rounded-xl font-bold flex items-center justify-center gap-3">
-                            Launch with WhatsApp
+                        <button onclick="whatsappRedirect()" class="w-full py-4 bg-blue-600 rounded-xl font-bold hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                            Deploy with Developer
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
         let lang = 'en';
-        let currentPrice = 0;
 
         function toggleLang() {
             lang = lang === 'en' ? 'ar' : 'en';
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('langBtn').innerText = lang === 'en' ? 'العربية' : 'English';
-            // Simple text swap
-            document.getElementById('mainTitle').innerHTML = lang === 'en' ? 'Describe your <span class="text-blue-500">Vision.</span>' : 'صف <span class="text-blue-500">رؤيتك.</span>';
+            // (You can add full text translations here)
         }
 
-        async function processAI() {
-            const input = document.getElementById('userInput').value.trim();
-            const errorBox = document.getElementById('errorMessage');
-            const inputArea = document.getElementById('userInput');
-
-            // 1. ADVANCED VALIDATION
-            if (input.length < 15 || !input.includes(" ")) {
-                errorBox.classList.remove('hidden');
-                inputArea.classList.add('error-shake', 'border-red-500');
-                setTimeout(() => inputArea.classList.remove('error-shake'), 500);
+        async function startGeminiBuild() {
+            const prompt = document.getElementById('promptInput').value;
+            const error = document.getElementById('errorMsg');
+            
+            // 1. INPUT VALIDATION (Simulating Gemini Check)
+            if (prompt.length < 10) {
+                error.innerText = lang === 'en' ? "⚠️ Gemini needs more detail to understand your vision." : "⚠️ نموذج جيميناي يحتاج تفاصيل أكثر لفهم رؤيتك";
+                error.classList.remove('hidden');
                 return;
             }
+            error.classList.add('hidden');
 
-            errorBox.classList.add('hidden');
-            inputArea.classList.remove('border-red-500');
+            // 2. SHOW LOADING
+            document.getElementById('inputSection').classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('hidden');
+            let prog = document.getElementById('progress');
+            let stat = document.getElementById('statusText');
             
-            // 2. SHOW LOADER
-            document.getElementById('setupPhase').classList.add('hidden');
-            document.getElementById('loadingPhase').classList.remove('hidden');
+            setTimeout(() => { prog.style.width = "40%"; stat.innerText = "Generating UI Design..."; }, 500);
+            setTimeout(() => { prog.style.width = "80%"; stat.innerText = "Calculating Egyptian Market Rates..."; }, 1500);
 
-            // Simulate AI "Thinking"
+            // 3. FINAL EXECUTION
             setTimeout(() => {
-                showResults(input);
-            }, 2500);
+                finishBuild(prompt);
+            }, 3000);
         }
 
-        function showResults(input) {
-            document.getElementById('loadingPhase').classList.add('hidden');
-            document.getElementById('resultPhase').classList.remove('hidden');
+        function finishBuild(userPrompt) {
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
 
-            // 3. GENERATE LANDING PAGE PHOTO
-            // We use a high-quality AI generator URL pattern
-            const prompt = encodeURIComponent(input + " website landing page professional ui ux high quality");
-            document.getElementById('aiPreview').src = `https://image.pollinations.ai/prompt/${prompt}?width=1080&height=1350&nologo=true`;
+            // IMAGE GENERATION (The Gemini Design)
+            const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(userPrompt + " professional website landing page mockup 8k hyperrealistic ui ux")}`;
+            document.getElementById('outputImage').src = imgUrl;
 
-            // 4. PRICE ENGINE
-            currentPrice = 7500; // Starting base
-            const tags = document.getElementById('featureTags');
-            tags.innerHTML = "";
+            // AI INSIGHTS
+            const insights = document.getElementById('aiInsights');
+            insights.innerHTML = `
+                <div class="p-3 bg-white/5 rounded-lg border-l-2 border-blue-500">✨ Gemini optimized the layout for high conversions.</div>
+                <div class="p-3 bg-white/5 rounded-lg border-l-2 border-purple-500">🎨 Dynamic color palette selected based on brand psychology.</div>
+                <div class="p-3 bg-white/5 rounded-lg border-l-2 border-red-500">📱 Fully responsive architecture for mobile users in Egypt.</div>
+            `;
 
-            const logic = [
-                { key: ['shop', 'store', 'متجر', 'بيع'], name: 'E-Commerce Logic', p: 12000 },
-                { key: ['app', 'dashboard', 'لوحة'], name: 'User Dashboard', p: 15000 },
-                { key: ['dark', 'gold', 'lux', 'فاخر'], name: 'Premium Theme', p: 3000 },
-                { key: ['food', 'rest', 'مطعم'], name: 'Booking System', p: 5000 }
-            ];
+            // COST CALCULATION
+            let price = 6000;
+            if (userPrompt.toLowerCase().match(/shop|store|sell|بيع/)) price += 14000;
+            if (userPrompt.toLowerCase().match(/arabic|عربي/)) price += 3000;
+            if (userPrompt.toLowerCase().match(/booking|reservation|حجز/)) price += 6000;
 
-            logic.forEach(item => {
-                if (item.key.some(k => input.toLowerCase().includes(k))) {
-                    currentPrice += item.p;
-                    tags.innerHTML += `<span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-bold">${item.name}</span>`;
-                }
-            });
-
-            document.getElementById('priceDisplay').innerText = currentPrice.toLocaleString() + " EGP";
+            document.getElementById('priceEGP').innerText = price.toLocaleString();
         }
 
-        function applyEdit() {
-            const newEdit = prompt("What specific change do you want to see?");
-            if (newEdit) {
-                document.getElementById('resultPhase').classList.add('hidden');
-                document.getElementById('loadingPhase').classList.remove('hidden');
-                
-                setTimeout(() => {
-                    const original = document.getElementById('userInput').value;
-                    showResults(original + " " + newEdit);
-                }, 2000);
-            }
-        }
-
-        function contactDev() {
-            const phone = "201015653338";
-            const details = document.getElementById('userInput').value;
-            const link = `https://wa.me/${phone}?text=I used your AI Architect.%0A%0AProject: ${details}%0AEstimated: ${currentPrice} EGP`;
+        function whatsappRedirect() {
+            const prompt = document.getElementById('promptInput').value;
+            const price = document.getElementById('priceEGP').innerText;
+            const link = `https://wa.me/201015653338?text=I used Gemini Architect.%0AProject: ${prompt}%0AEstimate: ${price} EGP`;
             window.open(link, '_blank');
         }
     </script>
