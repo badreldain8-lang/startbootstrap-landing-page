@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebMarket AI - Egypt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Inter:wght@400;700&display=swap');
+        body { font-family: 'Inter', 'Cairo', sans-serif; transition: all 0.3s ease; }
+        .arabic { direction: rtl; font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <nav class="p-6 bg-white shadow-sm flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-blue-600" id="logoText">WebMarket AI</h1>
+        <button onclick="toggleLanguage()" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg font-medium" id="langBtn">العربية</button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-6">
+        <section id="step1" class="space-y-6">
+            <h2 class="text-3xl font-bold" id="mainTitle">Describe your dream website</h2>
+            <textarea id="userDescription" class="w-full h-40 p-4 border rounded-xl shadow-inner focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Ex: I want a website for my clothing brand with a payment gateway..."></textarea>
+            
+            <button onclick="generateRecommendations()" class="w-full bg-blue-600 text-white py-4 rounded-xl text-xl font-bold hover:bg-blue-700 transition" id="recommendBtn">Get Recommendations & Price</button>
+        </section>
+
+        <section id="resultSection" class="hidden mt-10 space-y-8 animate-fade-in">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-xl">
+                <h3 class="font-bold text-lg mb-2" id="recTitle">AI Recommendations for you:</h3>
+                <ul id="recList" class="list-disc list-inside space-y-2 text-gray-700"></ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h3 class="font-bold mb-4" id="previewTitle">Your Layout Preview</h3>
+                    <img id="previewImg" src="https://via.placeholder.com/400x300?text=Generating+Preview..." class="w-full rounded-lg shadow">
+                    <p class="mt-4 text-sm text-gray-500" id="editNote">You can edit these features later with our team.</p>
+                </div>
+
+                <div class="bg-blue-900 text-white p-8 rounded-xl shadow-xl flex flex-col justify-center items-center">
+                    <h3 class="text-xl opacity-80" id="costTitle">Estimated Cost</h3>
+                    <div class="text-5xl font-black my-4"><span id="totalPrice">0</span> <small class="text-lg">EGP</small></div>
+                    <button class="bg-green-500 hover:bg-green-400 px-6 py-3 rounded-full font-bold transition w-full" id="orderBtn">Start Building Now</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentLang = 'en';
+
+        const content = {
+            en: {
+                logo: "WebMarket AI", lang: "العربية", title: "Describe your dream website",
+                placeholder: "Ex: I want a bakery website with a menu and delivery...",
+                btn: "Get Recommendations & Price", rec: "AI Recommendations for you:",
+                cost: "Estimated Cost", order: "Start Building Now", edit: "You can edit these features later.",
+                preview: "Your Layout Preview"
+            },
+            ar: {
+                logo: "سوق المواقع", lang: "English", title: "صف موقع أحلامك بالتفصيل",
+                placeholder: "مثال: أريد موقع لمخبز مع قائمة طعام وخدمة توصيل...",
+                btn: "احصل على الاقتراحات والسعر", rec: "توصيات الذكاء الاصطناعي لك:",
+                cost: "التكلفة التقديرية", order: "ابدأ التنفيذ الآن", edit: "يمكنك تعديل هذه الخصائص لاحقاً.",
+                preview: "معاينة التصميم"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.body.classList.toggle('arabic', currentLang === 'ar');
+            
+            // Update UI Text
+            document.getElementById('logoText').innerText = content[currentLang].logo;
+            document.getElementById('langBtn').innerText = content[currentLang].lang;
+            document.getElementById('mainTitle').innerText = content[currentLang].title;
+            document.getElementById('userDescription').placeholder = content[currentLang].placeholder;
+            document.getElementById('recommendBtn').innerText = content[currentLang].btn;
+            document.getElementById('recTitle').innerText = content[currentLang].rec;
+            document.getElementById('costTitle').innerText = content[currentLang].cost;
+            document.getElementById('orderBtn').innerText = content[currentLang].order;
+            document.getElementById('editNote').innerText = content[currentLang].edit;
+            document.getElementById('previewTitle').innerText = content[currentLang].preview;
+        }
+
+        function generateRecommendations() {
+            const desc = document.getElementById('userDescription').value.toLowerCase();
+            const list = document.getElementById('recList');
+            const priceEl = document.getElementById('totalPrice');
+            const img = document.getElementById('previewImg');
+            list.innerHTML = "";
+            
+            let basePrice = 5000;
+            let recs = [];
+
+            // Logic Simulation (AI Simulation)
+            if (desc.includes('shop') || desc.includes('store') || desc.includes('متجر')) {
+                recs = currentLang === 'en' ? ["Shopping Cart", "Payment Gateway (Fawry/Stripe)", "Product Management"] : ["سلة تسوق", "بوابة دفع (فوري)", "نظام إدارة المنتجات"];
+                basePrice += 15000;
+                img.src = "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=400&q=80";
+            } else if (desc.includes('food') || desc.includes('restaurant') || desc.includes('مطعم')) {
+                recs = currentLang === 'en' ? ["Online Menu", "Reservation System", "Google Maps Integration"] : ["منيو أونلاين", "نظام حجز طاولات", "ربط مع خرائط جوجل"];
+                basePrice += 8000;
+                img.src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80";
+            } else {
+                recs = currentLang === 'en' ? ["Responsive Design", "Contact Form", "SEO Optimization"] : ["تصميم متجاوب", "نموذج اتصال", "تحسين محركات البحث"];
+                basePrice += 3000;
+                img.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80";
+            }
+
+            recs.forEach(item => {
+                let li = document.createElement('li');
+                li.innerText = item;
+                list.appendChild(li);
+            });
+
+            priceEl.innerText = basePrice.toLocaleString();
+            document.getElementById('resultSection').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
